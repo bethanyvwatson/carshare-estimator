@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <div>
+      <form id='rates-form'>
+        <label for='vehicle-types'> Vehicle Type: </label>
+        <select required name='vehicle-types' id='vehicle-types'>
+          <option value='' disabled='true' >Select Vehicle Type</option>
+          <option value='30' selected>Car</option>
+          <option value='32'>Van</option>
+          <option value='40'>Truck</option>
+        </select>
+        <br>
+        <label for='miles-traveled'> Miles Traveled: </label>
+        <input id='miles-traveled' type='number' required min='.1' step='.1'>
+        <br>
+        <br>
+        <label for='plan-types'> Plan Type: </label>
+        <select required name='plan-types' id='plan-types'>
+          <option value='' disabled='true' >Select Plan Type</option>
+          <option value='0' selected>It's My Car</option>
+          <option value='1'>Just In Case</option>
+        </select>
+        <br>
+        <label for='pickup-date'> Pick-up: </label>
+        <input type="date" id="pickup-date" required>
+        <select name="pickup-hour" id="pickup-hour" required>
+          <option value='' disabled=true selected> Select Hour </option>
+          <option value='1'> 1 </option>
+          <option value='2'> 2 </option>
+          <option value='3'> 3 </option>
+          <option value='4'> 4 </option>
+          <option value='5'> 5 </option>
+          <option value='6'> 6 </option>
+          <option value='7'> 7 </option>
+          <option value='8'> 8 </option>
+          <option value='9'> 9 </option>
+          <option value='10'> 10 </option>
+          <option value='11'> 11 </option>
+          <option value='12'> 12 </option>
+        </select>
+        <select name='pickup-min' id='pickup-min'>
+          <option value='' disabled='true' selected> Select Min </option>
+          <option value='00'> 00 </option>
+          <option value='15'> 15 </option>
+          <option value='30'> 30 </option>
+          <option value='45'> 45 </option>
+        </select>
+        <select name='pickup-meridian' id='pickup-meridian'>
+          <option value='' disabled='true' selected> Select AM/PM </option>
+          <option value='0'> AM </option>
+          <option value='1'> PM </option>
+        </select>
+        <br>
+        <label for='dropoff-date'> Drop-off: </label>
+        <input type="date" id="dropoff-date" required>
+            <select name="dropoff-hour" id="dropoff-hour" required>
+          <option value='' disabled=true selected> Select Hour </option>
+          <option value='1'> 1 </option>
+          <option value='2'> 2 </option>
+          <option value='3'> 3 </option>
+          <option value='4'> 4 </option>
+          <option value='5'> 5 </option>
+          <option value='6'> 6 </option>
+          <option value='7'> 7 </option>
+          <option value='8'> 8 </option>
+          <option value='9'> 9 </option>
+          <option value='10'> 10 </option>
+          <option value='11'> 11 </option>
+          <option value='12'> 12 </option>
+        </select>
+        <select name='dropoff-min' id='dropoff-min'>
+          <option value='' disabled='true' selected> Select Min </option>
+          <option value='00'> 00 </option>
+          <option value='15'> 15 </option>
+          <option value='30'> 30 </option>
+          <option value='45'> 45 </option>
+        </select>
+        <select name='dropoff-meridian' id='dropoff-meridian'>
+          <option value='' disabled='true' selected> Select AM/PM </option>
+          <option value='0'> AM </option>
+          <option value='1'> PM </option>
+        </select>
+        <br>
+        <button id='calculate-rate' type='submit'> Calculate </button>
+        <h1> Estimated Trip Cost:
+          <div id='estimated-cost'> Submit the Form to Receive an Estimate</div>
+        </h1>
+      </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="resources/javascript/estimate_calculator.js"></script>
+  </body>
+</html>
