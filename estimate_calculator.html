@@ -23,26 +23,15 @@
           <option value='' disabled='true' >Select Plan Type</option>
           <option value='0' selected>It's My Car</option>
           <option value='1'>Just In Case</option>
-        </select>
+        </select> -->
         <br>
         <label for='pickup-date'> Pick-up: </label>
-        <input type="date" id="pickup-date" required>
-        <select name="pickup-hour" id="pickup-hour" required>
-          <option value='' disabled=true selected> Select Hour </option>
-          <option value='1'> 1 </option>
-          <option value='2'> 2 </option>
-          <option value='3'> 3 </option>
-          <option value='4'> 4 </option>
-          <option value='5'> 5 </option>
-          <option value='6'> 6 </option>
-          <option value='7'> 7 </option>
-          <option value='8'> 8 </option>
-          <option value='9'> 9 </option>
-          <option value='10'> 10 </option>
-          <option value='11'> 11 </option>
-          <option value='12'> 12 </option>
+        <input type="date" id="pickup-date" v-model='pickupDate' required>
+        <select name="pickup-hour" id="pickup-hour" v-model='pickupHour' required>
+          <option selected disabled value=''> Hour </option>
+          <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
         </select>
-        <select name='pickup-min' id='pickup-min'>
+       <!-- <select name='pickup-min' id='pickup-min'>
           <option value='' disabled='true' selected> Select Min </option>
           <option value='00'> 00 </option>
           <option value='15'> 15 </option>
