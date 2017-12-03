@@ -4,21 +4,21 @@
     <meta charset="utf-8"/>
   </head>
   <body>
-    <div>
+    <div id='estimator'>
       <form id='rates-form'>
         <label for='vehicle-types'> Vehicle Type: </label>
-        <select required name='vehicle-types' id='vehicle-types'>
-          <option value='' disabled='true' >Select Vehicle Type</option>
+        <select required id='vehicle-rates' v-model='vehicleRate'>
+          <option value='' disabled='true'>Select Vehicle Type</option>
           <option value='30' selected>Car</option>
           <option value='32'>Van</option>
           <option value='40'>Truck</option>
         </select>
         <br>
         <label for='miles-traveled'> Miles Traveled: </label>
-        <input id='miles-traveled' type='number' required min='.1' step='.1'>
+        <input id='miles-traveled' type='number' required min='.1' step='.1' v-model='milesTraveled'>
         <br>
         <br>
-        <label for='plan-types'> Plan Type: </label>
+<!--         <label for='plan-types'> Plan Type: </label>
         <select required name='plan-types' id='plan-types'>
           <option value='' disabled='true' >Select Plan Type</option>
           <option value='0' selected>It's My Car</option>
@@ -83,17 +83,16 @@
           <option value='' disabled='true' selected> Select AM/PM </option>
           <option value='0'> AM </option>
           <option value='1'> PM </option>
-        </select>
+        </select> -->
         <br>
-        <button id='calculate-rate' type='submit'> Calculate </button>
         <h1> Estimated Trip Cost:
-          <div id='estimated-cost'> Submit the Form to Receive an Estimate</div>
+          <input type='text' readonly id='estimated-cost' v-model="cost"></div>
         </h1>
       </form>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
-    <script src="resources/javascript/estimate_calculator.js"></script>
+    <script src="resources/javascript/vue_estimator.js"></script>
   </body>
 </html>
