@@ -10,18 +10,28 @@ h1 {
 
 body {
   font-family: sans-serif;
-  font-size: 20px;
+  font-size: 15px;
   background-color: #B4D24E;
 }
 
 legend {
-  font-size: 25px;
+  font-size: 20px;
   color: white;
   background-color: #468EB5;
   width: 80%;
   padding: 5px;
   border: solid #468EB5 thin;
   margin: 10px;
+  font-weight: bold;
+}
+
+fieldset.cost {
+  border: solid #F59318 thick;
+}
+
+fieldset.cost legend {
+  background-color: #F59318;
+  border-color: #F59318;
 }
 
 fieldset {
@@ -46,6 +56,10 @@ fieldset div {
   width: 100%;
 }
 
-.select-style {
+select.form-field {
   border: none;
+}
+
+.form-field.time-field {
+  width: 30%;
 }

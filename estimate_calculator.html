@@ -7,12 +7,17 @@
   <body>
     <div id='estimator'>
       <form id='rates-form'>
+        <fieldset class='cost'>
+          <legend class='cost'>Estimated Cost</legend>
+          <p> ${{mileageCharges}} mileage + ${{timeCharges}} time + ${{standardFees}} fees + ${{taxes}} taxes</p>
+          <p><strong> Total: ${{cost}} </strong></p>
+        </fieldset>
         <fieldset>
-          <legend>Vehicle Information</legend>
+          <legend>Vehicle and Mileage Settings</legend>
           <div>
             <label for='vehicle-types'> Select your desired vehicle type: </label>
             <p>
-              <select class='form-field select-style' required id='vehicle-rates' v-model='vehicleRate'>
+              <select class='form-field' required id='vehicle-rates' v-model='vehicleRate'>
                 <option value='' disabled='true'>Select Vehicle Type</option>
                 <option value='30' selected>Car</option>
                 <option value='32'>Van</option>
@@ -31,33 +36,42 @@
           </div>
         </fieldset>
         <fieldset>
-          <legend> Trip Information</legend>
+          <legend> Reservation Settings</legend>
           <div>
-            <label for='pickup-date'> Pick-up: </label>
-            <input type="date" id="pickup-date" v-model='pickupDate' required>
-            <select name="pickup-hour" id="pickup-hour" v-model='pickupHour' required>
-              <option selected disabled value=''> Select Hour </option>
-              <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
-            </select>
-            <select name='pickup-min' id='pickup-min' v-model='pickupMin'>
-              <option value='' disabled='true' selected> Select Min </option>
-              <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
-            </select>
-            <select name='pickup-meridian' id='pickup-meridian' v-model='pickupMeridian'>
-              <option value='' disabled='true' selected> Select AM/PM </option>
-              <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
-            </select>
-            <label for='trip-hours'>Num Hours: <label>
-            <input type='number' id='trip-hours' min='0' step='1' v-model='tripHours'>
-            <label for='trip-mins'>Num Mins: </label>
-            <select id='trip-mins' v-model='tripMins'> 
-              <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
-            </select>
+            <label for='pickup-date'> Enter the reservation start date: </label>
+            <p>
+              <input class='form-field' type="date" id="pickup-date" v-model='pickupDate' required>
+            </p>
+            <label for='pickup-hour'> Enter the reservation start time: </label>
+            <p>
+              <span>
+                <select class='form-field time-field' name="pickup-hour" id="pickup-hour" v-model='pickupHour' required>
+                  <option selected disabled value=''> Select Hour </option>
+                  <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
+                </select>
+                <select class='form-field time-field' name='pickup-min' id='pickup-min' v-model='pickupMin'>
+                  <option value='' disabled='true' selected> Select Min </option>
+                  <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
+                </select>
+                <select class='form-field time-field' name='pickup-meridian' id='pickup-meridian' v-model='pickupMeridian'>
+                  <option value='' disabled='true' selected> Select AM/PM </option>
+                  <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
+                </select>
+              </span>
+            </p>
+            <label for='trip-hours'>Enter the duration of the reservation: <label>
+            <p>
+              <span>
+                <input class='form-field time-field' type='number' id='trip-hours' min='0' step='1' v-model='tripHours'>
+                <span> hours </span>
+                <select class='form-field time-field' id='trip-mins' v-model='tripMins'> 
+                  <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
+                </select>
+                <span> mins </span>
+              </span>
+            </p>
           </div>
         </fieldset>
-        <div>
-          <h1> Estimated Trip Cost: ${{cost}} </h1>
-      </div>
       </form>
     </div>
 
