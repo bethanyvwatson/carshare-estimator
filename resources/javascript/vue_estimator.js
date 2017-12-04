@@ -23,6 +23,61 @@ window.onload = function () {
     tripMins: 0
   };
 
+  var summedQuarterlyCharges = function(vueComponent) {
+    // Calculates the cost of each quarter-hour (15 minute) segment for the described trip.
+    // Returns a float, representing the total cost of the trip in dollars (the sum of all quarterly charges).
+    // Time charges are influenced by: plan type, day of the week, time of day, and trip duration.
+    
+    var startDate = new Date(Date.parse(vueComponent.pickupDate));
+
+    // Set the hours, converted to 24hr time to more easily detect nighttime hours.
+    // TODO: 12 does not quite work for detecting midnight.
+    startDate.setHours(vueComponent.pickupHour + (12 * vueComponent.pickupMeridian), vueComponent.pickupMin);
+
+    // Each index represents a 15 minute chunk of this trip
+    // For each chunk, we calculate the amount paid for that chunk.
+    var usageArray = new Array((vueComponent.tripHours * 4) + (vueComponent.tripMins/60) * 4);
+
+    // Empty arrays cannot be iterated upon
+    usageArray.fill(undefined);
+
+    // Initialize shared variables for the loop.
+    // Current means "in respect to the current iteration."
+    var currentDate = startDate;
+    var currentDayOfWeek = startDate.getDay();
+    var consecutiveQuarterHours = 0;
+
+    // Calculate the individual time cost for each 15 minute segment of the journey.
+    // Store this cost at the index representing each segment.
+    usageArray.forEach(function(curr, index, usageArray) {
+      var costThisQuarter = 0;
+
+      // For long trips, only 10 hours per day accrue hourly charges.
+      // If we have not surpassed 10 hours in a 24 hr period, the hourly charge is normal.
+      // Otherwise, accrue no additional charges until the next 24 hr period.
+      if (consecutiveQuarterHours < 4 * _maxDailyHrsCharged) {
+        costThisQuarter = parseFloat((isWeekend(currentDayOfWeek) ? vueComponent.weekendRate : vueComponent.weekdayRate)) * 0.25;
+        if (_nighttimeHours.includes(currentDate.getHours())) {
+          costThisQuarter = costThisQuarter * _nighttimeDiscountMultiplier;
+        }
+        
+        consecutiveQuarterHours += 1;
+      } else {
+        consecutiveQuarterHours = consecutiveQuarterHours < _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
+      }
+
+      // Increment the date by 15 mins for the next iteration.
+      currentDate = new Date(currentDate.getTime() + _quarterHour);
+      currentDayOfWeek = currentDate.getDay();
+
+      // Persist the cost for this quarter hour.
+      usageArray[index] = costThisQuarter;
+    }, vueComponent);
+
+    var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
+    return chargesSum;
+  };
+
   var isWeekend = function(dayNumber) {
     // JavaScript Date.getDay() lists 5 and 6 as Sat and Sun.
     // TODO: Weekend days and hours are actually 5pm Fri - 5pm Sun
@@ -55,58 +110,10 @@ window.onload = function () {
       },
       timeCharges: function() {
         // Retuns a float representing the cost, in dollars, for reserving a vehicle for the specified amount of time.
-        // Time charges are influenced by: plan type, day of the week, time of day, and trip duration.
-        var startDate = new Date(Date.parse(this.pickupDate));
-
-        // Set the hours, converted to 24hr time to more easily detect nighttime hours.
-        // TODO: 12 does not quite work for detecting midnight.
-        startDate.setHours(this.pickupHour + (12 * this.pickupMeridian), this.pickupMin);
-
-        // Each index represents a 15 minute chunk of this trip
-        // For each chunk, we calculate the amount paid for that chunk.
-        var usageArray = new Array((this.tripHours * 4) + (this.tripMins/60) * 4);
-
-        // Empty arrays cannot be iterated upon
-        usageArray.fill(undefined);
-
-        // Initialize shared variables for the loop.
-        // Current means "in respect to the current iteration."
-        var currentDate = startDate;
-        var currentDayOfWeek = startDate.getDay();
-        var consecutiveQuarterHours = 0;
-
-        // Calculate the individual time cost for each 15 minute segment of the journey.
-        // Store this cost at the index representing each segment.
-        usageArray.forEach(function(curr, index, usageArray) {
-          var costThisQuarter = 0;
-
-          // For long trips, only 10 hours per day accrue hourly charges.
-          // If we have not surpassed 10 hours in a 24 hr period, the hourly charge is normal.
-          // Otherwise, accrue no additional charges until the next 24 hr period.
-          if (consecutiveQuarterHours < 4 * _maxDailyHrsCharged) {
-            costThisQuarter = parseFloat((isWeekend(currentDayOfWeek) ? this.weekendRate : this.weekdayRate)) * 0.25;
-            console.log(costThisQuarter);
-            if (_nighttimeHours.includes(currentDate.getHours())) {
-              costThisQuarter = costThisQuarter * _nighttimeDiscountMultiplier;
-            }
-            
-            consecutiveQuarterHours += 1;
-          } else {
-            consecutiveQuarterHours = consecutiveQuarterHours < _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
-          }
-
-          // Increment the date by 15 mins for the next iteration.
-          currentDate = new Date(currentDate.getTime() + _quarterHour);
-          currentDayOfWeek = currentDate.getDay();
-
-          // Persist the cost for this quarter hour.
-          usageArray[index] = costThisQuarter;
-        }, this);
-
-        var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
-        return chargesSum;
+        return summedQuarterlyCharges(this);
       },
       weekdayRate: function() {
+        // TODO: adjust for selected plan
         // Rates for Regular Plans is $4.95.
         // Rates for Emergency Plans is $7.95.
         return 5.00; 
