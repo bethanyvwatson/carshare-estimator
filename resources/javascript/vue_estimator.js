@@ -47,7 +47,7 @@ window.onload = function () {
     // For each chunk, we calculate the amount paid for that chunk.
     var usageArray = new Array((vueComponent.tripHours * 4) + (vueComponent.tripMins/60) * 4);
 
-    // Empty arrays cannot be iterated upon
+    // Empty arrays cannot be iterated upon.
     usageArray.fill(undefined);
 
     // Initialize shared variables for the loop.
