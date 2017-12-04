@@ -4,14 +4,16 @@
  * blue:    #468EB5;
  * gray:    #D8D8D8;
  */
-h1 {
-    color: #F59318;
-}
 
 body {
   font-family: sans-serif;
   font-size: 15px;
   background-color: #B4D24E;
+}
+
+#estimator {
+  max-width: 85%;
+  margin: 5px;
 }
 
 legend {
@@ -23,15 +25,6 @@ legend {
   border: solid #468EB5 thin;
   margin: 10px;
   font-weight: bold;
-}
-
-fieldset.cost {
-  border: solid #F59318 thick;
-}
-
-fieldset.cost legend {
-  background-color: #F59318;
-  border-color: #F59318;
 }
 
 fieldset {
@@ -48,6 +41,15 @@ fieldset p {
 
 fieldset div {
   margin-bottom: 15px;
+}
+
+fieldset.cost {
+  border: solid #F59318 thick;
+}
+
+fieldset.cost legend {
+  background-color: #F59318;
+  border-color: #F59318;
 }
 
 .form-field {
