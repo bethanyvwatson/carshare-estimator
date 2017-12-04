@@ -7,8 +7,12 @@ window.onload = function () {
   };
 
   var timeData = {
+    dropoffDate: '',
+    dropoffHour: '',
     hours: [1,2,3,4,5,6,7,8,9,10,11,12],
-    pickupDate: '01/01/2017',
+    meridians: { 'AM': 0, 'PM': 1 },
+    mins: ['00', '15', '30', '45'],
+    pickupDate: '',
     pickupHour: ''
   };
 
@@ -24,14 +28,14 @@ window.onload = function () {
       mileageCharges: function() {
         // Returns a float representing the cost, in dollars, for mileage on this trip.
         // Each class of vehicle has a different cost per mile.
-        // charges = per-mile-rate for selected vehicle * total number of miles
+        // charges = per-mile-rate for selected vehicle type * total number of miles
         var dollarsPerMile = parseFloat(this.vehicleRate)/100;
         var numMiles = parseFloat(this.milesTraveled);
         return dollarsPerMile * numMiles;
       },
       subtotal: function() {
         // Returns a float representing the estimated cost of a trip, excluding taxes.
-        // Subotal cost includes charges for: mileage, time used, fees.
+        // Subtotal cost includes charges for: mileage, time used, fees.
         // Fees are made up.
         var standardFees = 4.50;
         return parseFloat(this.mileageCharges + this.timeCharges + standardFees);
@@ -45,3 +49,4 @@ window.onload = function () {
     methods: {}
   });
 }
+
