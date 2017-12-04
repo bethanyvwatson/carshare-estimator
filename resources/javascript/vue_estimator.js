@@ -23,6 +23,15 @@ window.onload = function () {
     tripMins: 0
   };
 
+  var convertTo24Hrs = function(hour, am0Pm1) {
+    // Converts given hour to 24 hour time.
+    // For noon and midnight, invert behavior for 12hr offset.
+    var noonOrMidnight = hour == 12;
+    return noonOrMidnight ? 
+      hour + (12 * !am0Pm1 + am0Pm1) : 
+      hour + (12 * am0Pm1);
+  };
+
   var summedQuarterlyCharges = function(vueComponent) {
     // Calculates the cost of each quarter-hour (15 minute) segment for the described trip.
     // Returns a float, representing the total cost of the trip in dollars (the sum of all quarterly charges).
@@ -32,7 +41,7 @@ window.onload = function () {
 
     // Set the hours, converted to 24hr time to more easily detect nighttime hours.
     // TODO: 12 does not quite work for detecting midnight.
-    startDate.setHours(vueComponent.pickupHour + (12 * vueComponent.pickupMeridian), vueComponent.pickupMin);
+    startDate.setHours(convertTo24Hrs(vueComponent.pickupHour, vueComponent.pickupMeridian), vueComponent.pickupMin);
 
     // Each index represents a 15 minute chunk of this trip
     // For each chunk, we calculate the amount paid for that chunk.
