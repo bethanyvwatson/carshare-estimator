@@ -4,7 +4,7 @@ window.onload = function () {
   const _nighttimeDiscountMultiplier = .5;
   const _quarterHour = 15*6000;
   const _quartersPerDay = 4 * 24;
-  const _taxMultiplier = 1.08;
+  const _taxMultiplier = 0.08;
 
   var mileageData = {
     vehicleRate: '',
@@ -32,6 +32,7 @@ window.onload = function () {
       hour + (12 * am0Pm1);
   };
 
+  //TODO check 10hour cap
   var summedQuarterlyCharges = function(vueComponent) {
     // Calculates the cost of each quarter-hour (15 minute) segment for the described trip.
     // Returns a float, representing the total cost of the trip in dollars (the sum of all quarterly charges).
@@ -40,7 +41,6 @@ window.onload = function () {
     var startDate = new Date(Date.parse(vueComponent.pickupDate));
 
     // Set the hours, converted to 24hr time to more easily detect nighttime hours.
-    // TODO: 12 does not quite work for detecting midnight.
     startDate.setHours(convertTo24Hrs(vueComponent.pickupHour, vueComponent.pickupMeridian), vueComponent.pickupMin);
 
     // Each index represents a 15 minute chunk of this trip
@@ -100,7 +100,7 @@ window.onload = function () {
       cost: function() {
         // Returns a float representing the estimated cost of a trip, in dollars.
         // Total cost includes charges for: mileage, time used, fees, and taxes.
-        return this.subtotal * _taxMultiplier || 0;        
+        return this.subtotal + this.taxes || 0;        
       },
       mileageCharges: function() {
         // Returns a float representing the cost, in dollars, for mileage on this trip.
@@ -108,15 +108,16 @@ window.onload = function () {
         // charges = per-mile-rate for selected vehicle type * total number of miles
         var dollarsPerMile = parseFloat(this.vehicleRate)/100;
         var numMiles = parseFloat(this.milesTraveled);
-        return dollarsPerMile * numMiles;
+        return dollarsPerMile * numMiles || 0;
       },
+      standardFees: function() { return 4.50; },
       subtotal: function() {
         // Returns a float representing the estimated cost of a trip, excluding taxes.
         // Subtotal cost includes charges for: mileage, time used, fees.
         // Fees are made up.
-        var standardFees = 4.50;
-        return parseFloat(this.mileageCharges + this.timeCharges + standardFees);
+        return parseFloat(this.mileageCharges + this.timeCharges + this.standardFees);
       },
+      taxes: function() { return this.subtotal * _taxMultiplier; },
       timeCharges: function() {
         // Retuns a float representing the cost, in dollars, for reserving a vehicle for the specified amount of time.
         return summedQuarterlyCharges(this);
