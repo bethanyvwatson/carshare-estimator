@@ -24,7 +24,8 @@ window.onload = function () {
   };
 
   var isWeekend = function(dayNumber) {
-    // JavaScript Date.getDay() lists 5 and 6 as Sat and Sun
+    // JavaScript Date.getDay() lists 5 and 6 as Sat and Sun.
+    // TODO: Weekend days and hours are actually 5pm Fri - 5pm Sun
     return [5,6].includes(dayNumber);
   };
 
@@ -56,20 +57,26 @@ window.onload = function () {
         // Retuns a float representing the cost, in dollars, for reserving a vehicle for the specified amount of time.
         // Time charges are influenced by: plan type, day of the week, time of day, and trip duration.
         var startDate = new Date(Date.parse(this.pickupDate));
-        startDate.setHours(this.pickupHour + (12 * this.pickupMeridian), this.pickupMin);
-        var currentDate = startDate;
 
-        var startingDayOfWeek = startDate.getDay();
-        var currentDayOfWeek = startingDayOfWeek;
-        var consecutiveQuarterHours = 0;
+        // Set the hours, converted to 24hr time to more easily detect nighttime hours.
+        // TODO: 12 does not quite work for detecting midnight.
+        startDate.setHours(this.pickupHour + (12 * this.pickupMeridian), this.pickupMin);
 
         // Each index represents a 15 minute chunk of this trip
         // For each chunk, we calculate the amount paid for that chunk.
         var usageArray = new Array((this.tripHours * 4) + (this.tripMins/60) * 4);
+
+        // Empty arrays cannot be iterated upon
         usageArray.fill(undefined);
-        console.log(this.tripMins);
-        console.log('mins:' +Math.min(0, 60.00/this.tripMins));
-        console.log('len' + usageArray.length);
+
+        // Initialize shared variables for the loop.
+        // Current means "in respect to the current iteration."
+        var currentDate = startDate;
+        var currentDayOfWeek = startDate.getDay();
+        var consecutiveQuarterHours = 0;
+
+        // Calculate the individual time cost for each 15 minute segment of the journey.
+        // Store this cost at the index representing each segment.
         usageArray.forEach(function(curr, index, usageArray) {
           var costThisQuarter = 0;
 
@@ -88,25 +95,24 @@ window.onload = function () {
             consecutiveQuarterHours = consecutiveQuarterHours < _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
           }
 
-          // Increment the date by 15 mins for the next iteration
+          // Increment the date by 15 mins for the next iteration.
           currentDate = new Date(currentDate.getTime() + _quarterHour);
           currentDayOfWeek = currentDate.getDay();
 
-          // Persist the cost for this quarter hour
+          // Persist the cost for this quarter hour.
           usageArray[index] = costThisQuarter;
         }, this);
 
         var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
-        console.log(chargesSum);
         return chargesSum;
       },
       weekdayRate: function() {
-        // Rates for Regular Plans is $4.95
-        // Rates for Emergency Plans is $7.95
+        // Rates for Regular Plans is $4.95.
+        // Rates for Emergency Plans is $7.95.
         return 5.00; 
       },
       weekendRate: function() { 
-        // Weekend Rates are $1.00 more expensive than Weekday Rates
+        // Weekend Rates are $1.00 more expensive than Weekday Rates.
         return this.weekdayRate + 1.00; 
       }
     },
