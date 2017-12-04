@@ -15,7 +15,7 @@
         </select>
         <br>
         <label for='miles-traveled'> Miles Traveled: </label>
-        <input id='miles-traveled' type='number' required min='.1' step='.1' v-model='milesTraveled'>
+        <input id='miles-traveled' type='number' required min='0' step='.1' v-model='milesTraveled'>
         <br>
         <br>
 <!--         <label for='plan-types'> Plan Type: </label>
@@ -31,29 +31,26 @@
           <option selected disabled value=''> Select Hour </option>
           <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
         </select>
-       <select name='pickup-min' id='pickup-min'>
+        <select name='pickup-min' id='pickup-min' v-model='pickupMin'>
           <option value='' disabled='true' selected> Select Min </option>
           <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
         </select>
-        <select name='pickup-meridian' id='pickup-meridian'>
+        <select name='pickup-meridian' id='pickup-meridian' v-model='pickupMeridian'>
           <option value='' disabled='true' selected> Select AM/PM </option>
           <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
         </select>
         <br>
-        <label for='dropoff-date'> Drop-off: </label>
-        <input type="date" id="dropoff-date" required>
-        <select name="dropoff-hour" id="dropoff-hour" required>
-          <option value='' disabled=true selected> Select Hour </option>
-          <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
-        </select>
-        <select name='dropoff-min' id='dropoff-min'>
-          <option value='' disabled='true' selected> Select Min </option>
+        <br>
+        How long will you be using the vehicle?
+        <br>
+        <label for='trip-hours'>Num Hours: <label>
+        <input type='number' id='trip-hours' min='0' step='1' v-model='tripHours'>
+        <br>
+        <label for='trip-mins'>Num Mins: </label>
+        <select id='trip-mins' v-model='tripMins'> 
           <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
         </select>
-        <select name='dropoff-meridian' id='dropoff-meridian'>
-          <option value='' disabled='true' selected> Select AM/PM </option>
-          <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
-        </select>
+        <br>
         <br>
         <h1> Estimated Trip Cost: ${{cost}} </h1>
       </form>
