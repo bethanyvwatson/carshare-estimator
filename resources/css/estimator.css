@@ -17,7 +17,6 @@ body {
 }
 
 #title {
-  max-width: 500px;
   margin: 5px auto;
 }
 
@@ -59,7 +58,6 @@ fieldset div {
 
 fieldset.cost {
   border: solid #F59318 thick;
-  height: 100%;
 }
 
 fieldset.cost legend {
@@ -72,6 +70,7 @@ fieldset.cost legend {
   max-width: 200px;
   width: 100%;
   padding: 5px;
+  border: none;
 }
 
 select.form-field {
@@ -79,7 +78,7 @@ select.form-field {
 }
 
 .form-field.time-field {
-  width: 30%;
+  width: 20%;
 }
 
 #rates-form {
