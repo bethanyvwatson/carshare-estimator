@@ -31,6 +31,13 @@
           <fieldset>
             <legend>Rate Information</legend>
             <div>
+              <label for='pricing-plan'> Select your pricing plan:</label>
+              <p>
+                <select id='pricing-plan' required class='form-field' v-model='pricingPlanModifier'>
+                  <option value='' disabled='true'>Select Plan</option>
+                  <option v-for='(val, key) in plans' v-bind:value='val'>{{key}}</option>
+                </select>
+              </p>
               <label for='vehicle-types'> Select your desired vehicle type: </label>
               <p>
                 <select class='form-field' required id='vehicle-rates' v-model='vehicleRate'>
@@ -39,7 +46,7 @@
                   <option value='32'>Van</option>
                   <option value='40'>Truck</option>
                 </select>
-              <p>
+              </p>
             </div>
           </fieldset>
           <fieldset>

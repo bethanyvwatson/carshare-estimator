@@ -14,13 +14,15 @@ window.onload = function () {
   var timeData = {
     hours: [1,2,3,4,5,6,7,8,9,10,11,12],
     meridians: { 'AM': 0, 'PM': 1 },
+    milesTraveled: 0,
     mins: ['00', '15', '30', '45'],
     pickupDate: '',
-    pickupHour: '',
-    pickupMin: '', 
+    pickupHour: '12',
+    pickupMin: '00', 
     pickupMeridian: 0,
+    plans: { 'My Car': 0, 'Just In Case': 3 },
     tripHours: 0,
-    tripMins: 0
+    tripMins: '00'
   };
 
   var convertTo24Hrs = function(hour, am0Pm1) {
@@ -95,7 +97,7 @@ window.onload = function () {
 
   new Vue({
     el: '#estimator',
-    data: Object.assign(mileageData, timeData),
+    data: Object.assign(mileageData, timeData, { pricingPlanModifier: '' }),
     computed: {
       cost: function() {
         // Returns a float representing the estimated cost of a trip, in dollars.
@@ -123,10 +125,9 @@ window.onload = function () {
         return summedQuarterlyCharges(this);
       },
       weekdayRate: function() {
-        // TODO: adjust for selected plan
         // Rates for Regular Plans is $4.95.
         // Rates for Emergency Plans is $7.95.
-        return 5.00; 
+        return 4.95 + this.pricingPlanModifier; 
       },
       weekendRate: function() { 
         // Weekend Rates are $1.00 more expensive than Weekday Rates.
