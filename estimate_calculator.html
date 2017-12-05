@@ -9,80 +9,88 @@
       <div id='title'>
         <h1> The Unofficial Trip Estimator </h1>
         <h3> for Ithaca Carshare </h3>
-        <span><a href='http://ithacacarshare.org/rates/community'>Learn more
-        about Ithaca Carshare's community pricing plans.</a>
-        </span> 
       </div>
       <form id='rates-form'>
-        <fieldset class='cost'>
-          <legend class='cost'>Estimated Cost</legend>
-
-          <p> ${{mileageCharges}} mileage + ${{timeCharges}} time + ${{standardFees}} fees + ${{taxes}} taxes</p>
-          <p><strong> Total: ${{cost}} </strong></p>
-        </fieldset>
-        <fieldset>
-          <legend>Rate Information</legend>
-          <div>
-            <label for='vehicle-types'> Select your desired vehicle type: </label>
-            <p>
-              <select class='form-field' required id='vehicle-rates' v-model='vehicleRate'>
-                <option value='' disabled='true'>Select Vehicle Type</option>
-                <option value='30' selected>Car</option>
-                <option value='32'>Van</option>
-                <option value='40'>Truck</option>
-              </select>
-            <p>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend> Trip Information</legend>
+        <div id='receipt'>
+          <fieldset class='cost'>
+            <legend class='cost'>Estimated Cost</legend>
+            <ul>
+              <li> ${{mileageCharges}} mileage </li>
+              <li> ${{timeCharges}} time </li>
+              <li> ${{standardFees}} fees </li>
+              <li> ${{taxes}} taxes </li>
+              <hr>
+              <li><strong> Total: ${{cost}} </strong></li>
+            </ul>
+            <small><a href='http://ithacacarshare.org/rates/community'>Learn more</a>
+            about community pricing plans for Ithaca Carshare.
+            </small> 
+          </fieldset>
+        </div>
+        <div id='forms'>
+          <fieldset>
+            <legend>Rate Information</legend>
             <div>
-              <label for='miles-traveled'> Enter expected travel distance: </label>
+              <label for='vehicle-types'> Select your desired vehicle type: </label>
+              <p>
+                <select class='form-field' required id='vehicle-rates' v-model='vehicleRate'>
+                  <option value='' disabled='true'>Select Vehicle Type</option>
+                  <option value='30' selected>Car</option>
+                  <option value='32'>Van</option>
+                  <option value='40'>Truck</option>
+                </select>
+              <p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend> Trip Information</legend>
+              <div>
+                <label for='miles-traveled'> Enter expected travel distance: </label>
+                <p>
+                  <span>
+                    <input class='form-field' id='miles-traveled' type='number' required min='0' step='.1' v-model='milesTraveled'>
+                    <span> miles </span>
+                  </span>
+                </p>
+            </div>
+            <div id='right'>
+              <label for='pickup-date'> Enter the reservation start date: </label>
+              <p>
+                <input class='form-field' type="date" id="pickup-date" v-model='pickupDate' required>
+              </p>
+              <label for='pickup-hour'> Enter the reservation start time: </label>
               <p>
                 <span>
-                  <input class='form-field' id='miles-traveled' type='number' required min='0' step='.1' v-model='milesTraveled'>
-                  <span> miles </span>
+                  <select class='form-field time-field' name="pickup-hour" id="pickup-hour" v-model='pickupHour' required>
+                    <option selected disabled value=''> Select Hour </option>
+                    <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
+                  </select>
+                  <select class='form-field time-field' name='pickup-min' id='pickup-min' v-model='pickupMin'>
+                    <option value='' disabled='true' selected> Select Min </option>
+                    <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
+                  </select>
+                  <select class='form-field time-field' name='pickup-meridian' id='pickup-meridian' v-model='pickupMeridian'>
+                    <option value='' disabled='true' selected> Select AM/PM </option>
+                    <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
+                  </select>
                 </span>
               </p>
-          </div>
-          <div>
-            <label for='pickup-date'> Enter the reservation start date: </label>
-            <p>
-              <input class='form-field' type="date" id="pickup-date" v-model='pickupDate' required>
-            </p>
-            <label for='pickup-hour'> Enter the reservation start time: </label>
-            <p>
-              <span>
-                <select class='form-field time-field' name="pickup-hour" id="pickup-hour" v-model='pickupHour' required>
-                  <option selected disabled value=''> Select Hour </option>
-                  <option v-for='hr in hours' v-bind:value='hr'>{{hr}}</option>
-                </select>
-                <select class='form-field time-field' name='pickup-min' id='pickup-min' v-model='pickupMin'>
-                  <option value='' disabled='true' selected> Select Min </option>
-                  <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
-                </select>
-                <select class='form-field time-field' name='pickup-meridian' id='pickup-meridian' v-model='pickupMeridian'>
-                  <option value='' disabled='true' selected> Select AM/PM </option>
-                  <option v-for='(val, key) in meridians' v-bind:value='val'>{{key}}</option>
-                </select>
-              </span>
-            </p>
-            <label for='trip-hours'>Enter the duration of the reservation: <label>
-            <p>
-              <span>
-                <input class='form-field time-field' type='number' id='trip-hours' min='0' step='1' v-model='tripHours'>
-                <span> hours </span>
-                <select class='form-field time-field' id='trip-mins' v-model='tripMins'> 
-                  <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
-                </select>
-                <span> mins </span>
-              </span>
-            </p>
-          </div>
-        </fieldset>
+              <label for='trip-hours'>Enter the duration of the reservation: <label>
+              <p>
+                <span>
+                  <input class='form-field time-field' type='number' id='trip-hours' min='0' step='1' v-model='tripHours'>
+                  <span> hours </span>
+                  <select class='form-field time-field' id='trip-mins' v-model='tripMins'> 
+                    <option v-for='min in mins' v-bind:value='min'>{{min}}</option>
+                  </select>
+                  <span> mins </span>
+                </span>
+              </p>
+            </div>
+          </fieldset>
+        </div>
       </form>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <script src="resources/javascript/vue_estimator.js"></script>

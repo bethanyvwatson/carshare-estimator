@@ -12,13 +12,13 @@ body {
 }
 
 #estimator {
-  max-width: 85%;
-  margin: 15px;
+  margin: 0px auto;
+  width: 85%;
 }
 
 #title {
   max-width: 500px;
-  margin: 10px;
+  margin: 5px auto;
 }
 
 #title h1, h3 {
@@ -26,10 +26,8 @@ body {
   text-align: center;
 }
 
-#title a {
-  font-size: 10px;
+a {
   color: black;
-  margin: 5px;
   font-color: #D8D8D8;
   font-weight: lighter;
 }
@@ -47,8 +45,6 @@ legend {
 
 fieldset {
   border: solid #468EB5 thick;
-  max-width: 500px;
-  width: 100%;
   background-color: #D8D8D8;
   margin: 10px;
 }
@@ -63,6 +59,7 @@ fieldset div {
 
 fieldset.cost {
   border: solid #F59318 thick;
+  height: 100%;
 }
 
 fieldset.cost legend {
@@ -74,6 +71,7 @@ fieldset.cost legend {
   font-size: 15px;
   max-width: 200px;
   width: 100%;
+  padding: 5px;
 }
 
 select.form-field {
@@ -83,3 +81,36 @@ select.form-field {
 .form-field.time-field {
   width: 30%;
 }
+
+#rates-form {
+  display: flex;
+}
+
+#receipt {
+  margin: 5px;
+  flex-basis: 30%;
+  order: 2;
+}
+
+#forms {
+  flex-basis: 70%;
+  order: 1;
+}
+
+ul {
+  padding: 0px;
+  list-style: none;
+}
+
+@media(max-width: 767px) {
+  #rates-form {
+    display: block;
+  }
+  li {
+    display: inline-block;
+  }
+  li + li:before {
+    content: " | ";
+  }
+}
+
