@@ -56,6 +56,8 @@ window.onload = function () {
     // Current means "in respect to the current iteration."
     var currentDate = startDate;
     var currentDayOfWeek = startDate.getDay();
+
+    // Track consecutive rental hours so that we can only charge for 10 out of every 24 hours.
     var consecutiveQuarterHours = 0;
 
     // Calculate the individual time cost for each 15 minute segment of the journey.
@@ -66,7 +68,7 @@ window.onload = function () {
       // For long trips, only 10 hours per day accrue hourly charges.
       // If we have not surpassed 10 hours in a 24 hr period, the hourly charge is normal.
       // Otherwise, accrue no additional charges until the next 24 hr period.
-      if (consecutiveQuarterHours < 4 * _maxDailyHrsCharged) {
+      if (consecutiveQuarterHours < (4 * _maxDailyHrsCharged)) {
         costThisQuarter = parseFloat((isWeekend(currentDayOfWeek) ? vueComponent.weekendRate : vueComponent.weekdayRate)) * 0.25;
         if (_nighttimeHours.includes(currentDate.getHours())) {
           costThisQuarter = costThisQuarter * _nighttimeDiscountMultiplier;
@@ -74,7 +76,8 @@ window.onload = function () {
         
         consecutiveQuarterHours += 1;
       } else {
-        consecutiveQuarterHours = consecutiveQuarterHours < _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
+        // Reset consecutive hours after 24 hours have passed
+        consecutiveQuarterHours = consecutiveQuarterHours > _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
       }
 
       // Increment the date by 15 mins for the next iteration.
@@ -121,7 +124,6 @@ window.onload = function () {
       },
       taxes: function() { return this.subtotal * _taxMultiplier; },
       timeCharges: function() {
-        // Retuns a float representing the cost, in dollars, for reserving a vehicle for the specified amount of time.
         return summedQuarterlyCharges(this);
       },
       weekdayRate: function() {
