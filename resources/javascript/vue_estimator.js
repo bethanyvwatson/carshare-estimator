@@ -20,7 +20,7 @@ window.onload = function () {
     pickupHour: '12',
     pickupMin: '00', 
     pickupMeridian: 0,
-    plans: { 'My Car': 0, 'Just In Case': 3 },
+    plans: { "It's My Car": 0, 'Just In Case': 3 },
     tripHours: 0,
     tripMins: '00'
   };
@@ -34,7 +34,15 @@ window.onload = function () {
       hour + (12 * am0Pm1);
   };
 
-  //TODO check 10hour cap
+  var isWeekend = function(dayNumber, hour) {
+    // Weekend days and hours are actually 5pm Fri - 5pm Sun
+    var lateFriday = dayNumber == 4 && hour >= 5;
+    var saturday = dayNumber == 5;
+    var earlySunday = dayNumber == 6 && hour < 5;
+
+    return lateFriday || saturday || earlySunday;
+  };
+
   var summedQuarterlyCharges = function(vueComponent) {
     // Calculates the cost of each quarter-hour (15 minute) segment for the described trip.
     // Returns a float, representing the total cost of the trip in dollars (the sum of all quarterly charges).
@@ -66,17 +74,27 @@ window.onload = function () {
       var costThisQuarter = 0;
 
       // For long trips, only 10 hours per day accrue hourly charges.
-      // If we have not surpassed 10 hours in a 24 hr period, the hourly charge is normal.
-      // Otherwise, accrue no additional charges until the next 24 hr period.
       if (consecutiveQuarterHours < (4 * _maxDailyHrsCharged)) {
-        costThisQuarter = parseFloat((isWeekend(currentDayOfWeek) ? vueComponent.weekendRate : vueComponent.weekdayRate)) * 0.25;
-        if (_nighttimeHours.includes(currentDate.getHours())) {
+        // If we have not surpassed 10 hours in a 24 hr period, the hourly charge is normal.
+
+        var currentHour = currentDate.getHours();
+        
+        // Calculate cost based on weekend or weekday rates
+        if (isWeekend(currentDayOfWeek, currentHour)) {
+          costThisQuarter = vueComponent.weekendRate * 0.25;
+        } else {
+          costThisQuarter = vueComponent.weekdayRate * 0.25;
+        }
+
+        // Apply nighttime discount
+        if (_nighttimeHours.includes(currentHour)) {
           costThisQuarter = costThisQuarter * _nighttimeDiscountMultiplier;
         }
         
         consecutiveQuarterHours += 1;
       } else {
-        // Reset consecutive hours after 24 hours have passed
+        // Otherwise, accrue no additional charges until the next 24 hr period.
+        // Reset consecutive hours after 24 hours have passed.
         consecutiveQuarterHours = consecutiveQuarterHours > _quartersPerDay ? 0 : consecutiveQuarterHours + 1;
       }
 
@@ -90,12 +108,6 @@ window.onload = function () {
 
     var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
     return vueComponent.toCash(chargesSum);
-  };
-
-  var isWeekend = function(dayNumber) {
-    // JavaScript Date.getDay() lists 5 and 6 as Sat and Sun.
-    // TODO: Weekend days and hours are actually 5pm Fri - 5pm Sun
-    return [5,6].includes(dayNumber);
   };
 
   new Vue({
