@@ -89,7 +89,7 @@ window.onload = function () {
     }, vueComponent);
 
     var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
-    return chargesSum;
+    return vueComponent.toCash(chargesSum);
   };
 
   var isWeekend = function(dayNumber) {
@@ -105,7 +105,7 @@ window.onload = function () {
       cost: function() {
         // Returns a float representing the estimated cost of a trip, in dollars.
         // Total cost includes charges for: mileage, time used, fees, and taxes.
-        return this.subtotal + this.taxes || 0;        
+        return this.toCash(this.subtotal + this.taxes || 0);        
       },
       mileageCharges: function() {
         // Returns a float representing the cost, in dollars, for mileage on this trip.
@@ -113,30 +113,34 @@ window.onload = function () {
         // charges = per-mile-rate for selected vehicle type * total number of miles
         var dollarsPerMile = parseFloat(this.vehicleRate)/100;
         var numMiles = parseFloat(this.milesTraveled);
-        return dollarsPerMile * numMiles || 0;
+        return this.toCash(dollarsPerMile * numMiles || 0);
       },
-      standardFees: function() { return 4.50; },
+      standardFees: function() { return this.toCash(4.50); },
       subtotal: function() {
         // Returns a float representing the estimated cost of a trip, excluding taxes.
         // Subtotal cost includes charges for: mileage, time used, fees.
         // Fees are made up.
-        return parseFloat(this.mileageCharges + this.timeCharges + this.standardFees);
+        return this.toCash(this.mileageCharges + this.timeCharges + this.standardFees);
       },
-      taxes: function() { return this.subtotal * _taxMultiplier; },
+      taxes: function() { return this.toCash(this.subtotal * _taxMultiplier); },
       timeCharges: function() {
         return summedQuarterlyCharges(this);
       },
       weekdayRate: function() {
         // Rates for Regular Plans is $4.95.
         // Rates for Emergency Plans is $7.95.
-        return 4.95 + this.pricingPlanModifier; 
+        return this.toCash(4.95 + this.pricingPlanModifier); 
       },
       weekendRate: function() { 
         // Weekend Rates are $1.00 more expensive than Weekday Rates.
-        return this.weekdayRate + 1.00; 
+        return this.toCash(this.weekdayRate + 1.00); 
       }
     },
-    methods: {}
+    methods: {
+      toCash: function(amount) {
+        return parseFloat(amount).toFixed(2);
+      }
+    }
   });
 }
 
