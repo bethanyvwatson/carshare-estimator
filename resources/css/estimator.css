@@ -78,7 +78,11 @@ select.form-field {
 }
 
 .form-field.time-field {
-  width: 20%;
+  width: 15%;
+}
+
+.form-field.date-field {
+  width: 40%;
 }
 
 #rates-form {
