@@ -107,7 +107,7 @@ window.onload = function () {
     }, vueComponent);
 
     var chargesSum = usageArray.reduce(function(a, b) { return a + b; }, 0);
-    return vueComponent.toCash(chargesSum);
+    return chargesSum;
   };
 
   new Vue({
@@ -117,7 +117,7 @@ window.onload = function () {
       cost: function() {
         // Returns a float representing the estimated cost of a trip, in dollars.
         // Total cost includes charges for: mileage, time used, fees, and taxes.
-        return this.toCash(this.subtotal + this.taxes || 0);        
+        return this.toCashString(parseFloat(this.subtotal) + parseFloat(this.taxes) || 0);        
       },
       mileageCharges: function() {
         // Returns a float representing the cost, in dollars, for mileage on this trip.
@@ -125,31 +125,31 @@ window.onload = function () {
         // charges = per-mile-rate for selected vehicle type * total number of miles
         var dollarsPerMile = parseFloat(this.vehicleRate)/100;
         var numMiles = parseFloat(this.milesTraveled);
-        return this.toCash(dollarsPerMile * numMiles || 0);
+        return this.toCashString(dollarsPerMile * numMiles || 0);
       },
-      standardFees: function() { return this.toCash(4.50); },
+      standardFees: function() { return this.toCashString(4.50); },
       subtotal: function() {
         // Returns a float representing the estimated cost of a trip, excluding taxes.
         // Subtotal cost includes charges for: mileage, time used, fees.
         // Fees are made up.
-        return this.toCash(this.mileageCharges + this.timeCharges + this.standardFees);
+        return this.toCashString(parseFloat(this.mileageCharges) + parseFloat(this.timeCharges) + parseFloat(this.standardFees));
       },
-      taxes: function() { return this.toCash(this.subtotal * _taxMultiplier); },
+      taxes: function() { return this.toCashString(this.subtotal * _taxMultiplier); },
       timeCharges: function() {
-        return summedQuarterlyCharges(this);
+        return this.toCashString(summedQuarterlyCharges(this));
       },
       weekdayRate: function() {
         // Rates for Regular Plans is $4.95.
         // Rates for Emergency Plans is $7.95.
-        return this.toCash(4.95 + this.pricingPlanModifier); 
+        return 4.95 + this.pricingPlanModifier; 
       },
       weekendRate: function() { 
         // Weekend Rates are $1.00 more expensive than Weekday Rates.
-        return this.toCash(this.weekdayRate + 1.00); 
+        return this.weekdayRate + 1.00; 
       }
     },
     methods: {
-      toCash: function(amount) {
+      toCashString: function(amount) {
         return parseFloat(amount).toFixed(2);
       }
     }
