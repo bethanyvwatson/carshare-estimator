@@ -30,8 +30,8 @@ window.onload = function () {
     // For noon and midnight, invert behavior for 12hr offset.
     var noonOrMidnight = hour == 12;
     return noonOrMidnight ? 
-      hour + (12 * !am0Pm1 + am0Pm1) : 
-      hour + (12 * am0Pm1);
+      hour + (12 * am0Pm1) :
+      hour + (12 * !am0Pm1 + am0Pm1); 
   };
 
   var isWeekend = function(dayNumber, hour) {
