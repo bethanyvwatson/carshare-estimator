@@ -14,12 +14,12 @@
           <fieldset class='cost'>
             <legend class='cost'>Estimated Cost</legend>
             <ul>
-              <li> ${{mileageCharges}} mileage </li>
-              <li> ${{timeCharges}} time </li>
-              <li> ${{standardFees}} fees </li>
-              <li> ${{taxes}} taxes </li>
+              <li> ${{toCashString(mileageCharges)}} mileage </li>
+              <li> ${{toCashString(timeCharges)}} time </li>
+              <li> ${{toCashString(standardFees)}} fees </li>
+              <li> ${{toCashString(taxes)}} taxes </li>
               <hr>
-              <li><strong> Total: ${{cost}} </strong></li>
+              <li><strong> Total: ${{toCashString(cost)}} </strong></li>
             </ul>
             <small><a href='http://ithacacarshare.org/rates/community'>Learn more</a>
             about community pricing plans for Ithaca Carshare.
